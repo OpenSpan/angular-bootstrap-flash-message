@@ -14,27 +14,13 @@ angular.module('flash', [])
 
   $rootScope.$on('$locationChangeSuccess', emit);
 
-  var asMessage = function(level, text) {
-    if (!text) {
-      text = level;
-      level = 'success';
-    }
-    return { level: level, text: text };
-  };
-
-  var asArrayOfMessages = function(level, text) {
-    if (level instanceof Array) return level.map(function(message) {
-      return message.text ? message : asMessage(message);
-    });
-    return text ? [{ level: level, text: text }] : [asMessage(level)];
-  };
-
-  var flash = function(level, text) {
-    emit(messages = asArrayOfMessages(level, text));
+  var flash = function(text, level) {
+    messages.push([ 'text': text, 'level': level || 'success' ])
+    emit();
   };
 
   angular.forEach(['danger', 'warning', 'info', 'success'], function(level) {
-    flash[level] = function (text) { flash(level, text); };
+    flash[level] = function (text) { flash(text, level); };
   });
 
   return flash;
