@@ -33,7 +33,7 @@ angular.module('flash', [])
     emit(messages = asArrayOfMessages(level, text));
   };
 
-  ['danger', 'warning', 'info', 'success'].forEach(function (level) {
+  angular.forEach(['danger', 'warning', 'info', 'success'], function(level) {
     flash[level] = function (text) { flash(level, text); };
   });
 
@@ -41,7 +41,7 @@ angular.module('flash', [])
 }])
 
 .directive('flashMessages', [function() {
-  var directive = { restrict: 'EA', replace: true };
+  var directive = { restrict: 'A', replace: true };
   directive.template =
     '<div ng-repeat="m in messages" class="alert alert-{{m.level}} alert-dismissable">' +
       '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
