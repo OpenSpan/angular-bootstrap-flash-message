@@ -29,9 +29,11 @@ angular.module('flash', [])
 .directive('flashMessages', [function() {
   var directive = { restrict: 'A', replace: true };
   directive.template =
-    '<div ng-repeat="m in messages" class="alert alert-{{m.level}} alert-dismissable">' +
-      '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
-      '{{m.text}}' +
+    '<div ng-repeat="m in messages">' +
+      '<div class="alert alert-{{m.level}} alert-dismissable">' +
+        '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
+        '{{m.text}}' +
+      '</div>' +
     '</div>';
 
   directive.controller = ['$scope', '$rootScope', function($scope, $rootScope) {
