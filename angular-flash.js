@@ -33,7 +33,7 @@ angular.module('flash', [])
     emit(messages = asArrayOfMessages(level, text));
   };
 
-  ['error', 'warning', 'info', 'success'].forEach(function (level) {
+  ['danger', 'warning', 'info', 'success'].forEach(function (level) {
     flash[level] = function (text) { flash(level, text); };
   });
 
@@ -43,9 +43,10 @@ angular.module('flash', [])
 .directive('flashMessages', [function() {
   var directive = { restrict: 'EA', replace: true };
   directive.template =
-    '<ol id="flash-messages">' +
-      '<li ng-repeat="m in messages" class="{{m.level}}">{{m.text}}</li>' +
-    '</ol>';
+    '<div ng-repeat="m in messages" class="alert alert-{{m.level}} alert-dismissable">' +
+      '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
+      '{{m.text}}' +
+    '</li>';
 
   directive.controller = ['$scope', '$rootScope', function($scope, $rootScope) {
     $rootScope.$on('flash:message', function(_, messages, done) {
