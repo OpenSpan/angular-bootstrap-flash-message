@@ -15,7 +15,7 @@ angular.module('flash', [])
   $rootScope.$on('$locationChangeSuccess', emit);
 
   var flash = function(text, level) {
-    messages.push([ 'text': text, 'level': level || 'success' ])
+    messages.push({ 'text': text, 'level': level || 'success' })
     emit();
   };
 
