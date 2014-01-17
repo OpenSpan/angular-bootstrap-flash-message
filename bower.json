@@ -8,5 +8,6 @@
   "dependencies"   : {
     "angular"      : "1.2.8"
   },
+  "main"           : "angular-flash.js",
   "ignore"         : [ "**/.*", "node_modules", "test" ]
 }
