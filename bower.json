@@ -1,12 +1,12 @@
 {
-  "name"           : "angular-flash",
-  "version"        : "1.1.0",
-  "description"    : "Angular.js Flash Messages",
-  "keywords"       : [ "angular", "js", "flash", "messages" ],
-  "author"         : "Guilherme J. Tramontina <guilherme.tramontina@gmail.com>",
+  "name"           : "angular-bootstrap-flash-message",
+  "version"        : "1.0.0",
+  "description"    : "Angular.js Flash Messages using Bootstrap3 styling",
+  "keywords"       : [ "angular", "js", "flash", "messages", "bootstrap" ],
+  "author"         : "Marius Ghita <mhitza@gmail.com>",
   "readmeFilename" : "README.md",
   "dependencies"   : {
-    "angular"      : "PatternConsulting/bower-angular#unstable"
+    "angular"      : "1.2.8"
   },
   "ignore"         : [ "**/.*", "node_modules", "test" ]
 }
