@@ -32,7 +32,7 @@ angular.module('flash', [])
     '<div ng-repeat="m in messages" class="alert alert-{{m.level}} alert-dismissable">' +
       '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
       '{{m.text}}' +
-    '</li>';
+    '</div>';
 
   directive.controller = ['$scope', '$rootScope', function($scope, $rootScope) {
     $rootScope.$on('flash:message', function(_, messages, done) {
