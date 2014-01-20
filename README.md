@@ -1,76 +1,38 @@
-# angular-flash
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/gtramontina/angular-flash/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-[![Build Status](https://travis-ci.org/gtramontina/angular-flash.png?branch=master)](https://travis-ci.org/gtramontina/angular-flash)
+# Angular Bootstrap flash message
 
-Flash messages for Angular.js. [Demo](http://embed.plnkr.co/y1INk36bPbW7GaX15QbQ/preview)
+A fork from the `angular-flash` project, with two aims; to have the flash messages use the 
+Bootstrap styling and have the option to timeout messages.
 
-Supports view changes, which means you can set a flash message, navigate to another view and your message will be displayed.
-## Install
-`bower install angular-flash-messages`
+# Installation
 
-## Usage
-After adding `angular-flash.js` to your project, add `flash` as a dependency to your module. Here is a simple example:
+`bower install angular-bootstrap-flash-message`
 
-```javascript
-angular.module('myModule', ['flash'])
-.controller('EditProductController', function($scope, flash) {
-  $scope.save = function() {
-    // … save the product
-    flash('Saved!');
-  };
-});
+# Usage
+
+```js
+angular.controller("Test", [
+ '$scope',
+ 'flash',
+ function($scope, flash) {
+   flash.success("Success message", 10)
+ }]);
 ```
 
-Then, in your HTML, simply add the `<flash:messages>` element where you want your messages to be displayed. It can be in your main template or individual partials.
+The module exports the `flash` service with the following methods:
+
+ * `flash.success`
+ * `flash.danger`
+ * `flash.info`
+ * `flash.warning`
+
+Each of these methods take two arguments:
+ 
+ * the flash message
+ * (optional) timeout to delete the flash message, in seconds
+
+And in order to render the flash messages, you must add the following directive in your
+template:
 
 ```html
-  <body ng-app="myModule">
-    <flash:messages></flash:messages>
-
-    <main ng:controller="HomeController">
-      <h1>Home</h1>
-    </main>
-  </body>
+<div flash:messages></div>
 ```
-
-### IE Support
-If you need IE8 support (or prefer), you can use the attribute directive: `<ol flash:messages></ol>`.
-
-## Examples
-
- - `flash('My message')`
-
-```html
-<ol id="flash-messages">
-  <li class="success">My message</li>
-</ol>
-```
-
- - `flash([ 'Hi!', 'My message' ])`
-
-```html
-<ol id="flash-messages">
-  <li class="success">Hi</li>
-  <li class="success">My message</li>
-</ol>
-```
-
- - `flash('error', 'Something went wrong…')`
-
-```html
-<ol id="flash-messages">
-  <li class="error">Something went wrong…</li>
-</ol>
-```
-
- - `flash([ 'Hi!', { level: 'warning', text: 'This is a warning!' } ])`
-
-```html
-<ol id="flash-messages">
-  <li class="success">Hi</li>
-  <li class="warning">This is a warning!</li>
-</ol>
-```
-
-## License
-This is licensed under the feel-free-to-do-whatever-you-want-to-do license.
