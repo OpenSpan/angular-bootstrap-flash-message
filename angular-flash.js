@@ -39,6 +39,9 @@ angular.module('flash', [])
     '<div ng-repeat="m in messages">' +
       '<div id="flash-message-{{m.reference}}" class="alert alert-{{m.level}} alert-dismissable">' +
         '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
+        '<icon ng-if="m.level == \'success\'" class="icon-ok-circle"> </icon>' +
+        '<icon ng-if="m.level == \'warning\'" class="icon-exclamation-sign"> </icon>' +
+        '<icon ng-if="m.level == \'danger\'" class="icon-remove"> </icon>' +
         '{{m.text}}' +
       '</div>' +
     '</div>';
