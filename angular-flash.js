@@ -59,7 +59,7 @@ angular.module('flash', [])
         '<icon ng-if="m.icon" class="icon-{{ m.icon }}">&nbsp;</icon>'+
         '<strong ng-if="m.tagline">{{ m.tagline }}:&nbsp;</strong>' +
         '{{ m.text }}' +
-        '<button type="button" class="close" data-dismiss="alert" ng-click="closeFlash(m.reference)" aria-hidden="true">&times;</button>' +
+        '<button type="button" class="close" ng-click="closeFlash(m.reference)" aria-hidden="true">&times;</button>' +
       '</div>' +
     '</div>';
 
