@@ -16,9 +16,27 @@ angular.module('flash', [])
   $rootScope.$on('$locationChangeSuccess', emit);
 
   pushFlash = function(text, level, seconds) {
+    var icon;
+    var tagline;
+    switch(level) {
+      case 'success':
+        icon = "icon-ok-circle";
+        tagline = 'Success';
+        break;
+      case 'warning':
+        icon = "icon-exclamation-sign";
+        tagline = 'Warning';
+        break;
+      case 'danger':
+        icon = "icon-remove";
+        tagline = 'Error';
+        break;
+    }
     messages.push({
       'text': text,
       'level': level,
+      'icon': icon,
+      'tagline': tagline,
       'seconds': seconds,
       'reference': counter++
     })
@@ -38,11 +56,10 @@ angular.module('flash', [])
   directive.template =
     '<div ng-repeat="m in messages">' +
       '<div id="flash-message-{{m.reference}}" class="alert alert-{{m.level}} alert-dismissable">' +
-        '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+
-        '<icon ng-if="m.level == \'success\'" class="icon-ok-circle"> </icon>' +
-        '<icon ng-if="m.level == \'warning\'" class="icon-exclamation-sign"> </icon>' +
-        '<icon ng-if="m.level == \'danger\'" class="icon-remove"> </icon>' +
-        '{{m.text}}' +
+        '<icon ng-if="m.icon" class="icon-{{ m.icon }}">&nbsp;</icon>'+
+        '<strong ng-if="m.tagline">{{ m.tagline }}:&nbsp;</strong>' +
+        '{{ m.text }}' +
+        '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
       '</div>' +
     '</div>';
 
