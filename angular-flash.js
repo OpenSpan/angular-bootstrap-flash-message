@@ -55,15 +55,18 @@ angular.module('flash', [])
   var directive = { restrict: 'A', replace: true };
   directive.template =
     '<div ng-repeat="m in messages">' +
-      '<div id="flash-message-{{m.reference}}" class="alert alert-{{m.level}} alert-dismissable">' +
+      '<div id="flash-message-{{m.reference}}" class="alert alert-{{m.level}}">' +
         '<icon ng-if="m.icon" class="icon-{{ m.icon }}">&nbsp;</icon>'+
         '<strong ng-if="m.tagline">{{ m.tagline }}:&nbsp;</strong>' +
         '{{ m.text }}' +
-        '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+        '<button type="button" class="close" data-dismiss="alert" ng-click="closeFlash(m.reference)" aria-hidden="true">&times;</button>' +
       '</div>' +
     '</div>';
 
   directive.controller = ['$scope', '$rootScope', '$timeout', function($scope, $rootScope, $timeout) {
+    $scope.closeFlash = function(ref) {
+      angular.element("#flash-message-"+ref).remove();
+    }
     $rootScope.$on('flash:message', function(_, messages, done) {
       $scope.messages = messages;
       angular.forEach(messages, function(message) {
