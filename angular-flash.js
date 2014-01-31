@@ -1,12 +1,12 @@
 angular.module('flash', [])
 .factory('flash', ['$rootScope', '$timeout', function($rootScope, $timeout) {
-  var messages = [];
+  var messages = {};
   var counter = 1;
 
   var reset;
-  var cleanup = function() {
+  var cleanup = function(zone) {
     $timeout.cancel(reset);
-    reset = $timeout(function() { messages = []; });
+    reset = $timeout(function() { messages[zone] = []; });
   };
 
   var emit = function() {
@@ -15,7 +15,7 @@ angular.module('flash', [])
 
   $rootScope.$on('$locationChangeSuccess', emit);
 
-  pushFlash = function(text, level, seconds) {
+  pushFlash = function(text, level, seconds, zone) {
     var icon;
     var tagline;
     switch(level) {
@@ -32,7 +32,7 @@ angular.module('flash', [])
         tagline = 'Error';
         break;
     }
-    messages.push({
+    messages[zone].push({
       'text': text,
       'level': level,
       'icon': icon,
@@ -45,14 +45,21 @@ angular.module('flash', [])
 
   var flash = {}
   angular.forEach(['danger', 'warning', 'info', 'success'], function(level) {
-    flash[level] = function (text, seconds) { pushFlash(text, level, seconds || false); };
+    flash[level] = function(options) {
+      pushFlash(
+        options.text,
+        options.level,
+        options.seconds || false,
+        options.zone
+      );
+    }
   });
 
   return flash;
 }])
 
 .directive('flashMessages', [function() {
-  var directive = { restrict: 'A', replace: true };
+  var directive = { restrict: 'A', replace: true, scope: { "zone": "=" } };
   directive.template =
     '<div ng-repeat="m in messages">' +
       '<div id="flash-message-{{m.reference}}" class="alert alert-{{m.level}}">' +
@@ -68,15 +75,15 @@ angular.module('flash', [])
       angular.element("#flash-message-"+ref).remove();
     }
     $rootScope.$on('flash:message', function(_, messages, done) {
-      $scope.messages = messages;
-      angular.forEach(messages, function(message) {
+      $scope.messages = messages[$scope.zone];
+      angular.forEach($scope.messages, function(message) {
         if(message.seconds === false) return;
         $timeout(
           function() { angular.element("#flash-message-"+message.reference).remove(); },
           message.seconds * 1000
         );
       });
-      done();
+      done($scope.zone);
     });
   }];
 
