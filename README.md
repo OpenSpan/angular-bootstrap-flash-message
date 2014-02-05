@@ -14,7 +14,11 @@ angular.controller("Test", [
  '$scope',
  'flash',
  function($scope, flash) {
-   flash.success("Success message", 10)
+   flash.success({
+     text: "Success message",
+     seconds: 10,
+     zone: 'form'
+   });
  }]);
 ```
 
