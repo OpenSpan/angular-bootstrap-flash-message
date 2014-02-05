@@ -32,6 +32,9 @@ angular.module('flash', [])
         tagline = 'Error';
         break;
     }
+
+    if(messages[zone] === undefined) messages[zone] = []
+
     messages[zone].push({
       'text': text,
       'level': level,
@@ -48,7 +51,7 @@ angular.module('flash', [])
     flash[level] = function(options) {
       pushFlash(
         options.text,
-        options.level,
+        level,
         options.seconds || false,
         options.zone
       );
