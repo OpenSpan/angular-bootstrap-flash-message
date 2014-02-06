@@ -60,7 +60,7 @@ angular.module('flash', [])
 }])
 
 .directive('flashMessages', [function() {
-  var directive = { restrict: 'A', replace: true, scope: { "zone": "=" } };
+  var directive = { restrict: 'A', replace: true, scope: { "zone": "@" } };
   directive.template =
     '<div id="flash-message-{{m.reference}}" class="alert alert-{{m.level}}">' +
       '<icon ng-if="m.icon" class="icon-{{ m.icon }}">&nbsp;</icon>'+
@@ -74,14 +74,16 @@ angular.module('flash', [])
       angular.element("#flash-message-"+ref).remove();
     }
     $rootScope.$on('flash:message', function(_, messages, done) {
-      $scope.m = message = messages[$scope.zone];
-      if(message.seconds) {
-        $timeout(
-          function() { $scope.closeFlash(message.reference); },
-          message.seconds * 1000
-        );
+      if(messages[$scope.zone]) {
+        $scope.m = message = messages[$scope.zone];
+        if(message.seconds) {
+          $timeout(
+            function() { $scope.closeFlash(message.reference); },
+            message.seconds * 1000
+          );
+        }
+        done($scope.zone);
       }
-      done($scope.zone);
     });
   }];
 
