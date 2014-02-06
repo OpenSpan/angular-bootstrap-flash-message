@@ -6,7 +6,8 @@
   "author"         : "Marius Ghita <mhitza@gmail.com>",
   "readmeFilename" : "README.md",
   "dependencies"   : {
-    "angular"      : "1.2.8"
+    "angular"      : "1.2.8",
+    "angular-mocks": "1.2.8"
   },
   "main"           : "angular-flash.js",
   "ignore"         : [ "**/.*", "node_modules", "test" ]

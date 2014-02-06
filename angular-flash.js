@@ -15,7 +15,7 @@ angular.module('flash', [])
 
   $rootScope.$on('$locationChangeSuccess', emit);
 
-  pushFlash = function(text, level, seconds, zone) {
+  pushFlash = function(text, level, seconds, zone, retryCallback) {
     var icon;
     var tagline;
     switch(level) {
@@ -39,7 +39,8 @@ angular.module('flash', [])
       'icon': icon,
       'tagline': tagline,
       'seconds': seconds,
-      'reference': counter++
+      'reference': counter++,
+      'retryCallback': retryCallback
     };
     emit();
   };
@@ -51,7 +52,8 @@ angular.module('flash', [])
         options.text,
         level,
         options.seconds || false,
-        options.zone
+        options.zone,
+        options.retryCallback || false
       );
     }
   });
@@ -65,7 +67,8 @@ angular.module('flash', [])
     '<div id="flash-message-{{m.reference}}" class="alert alert-{{m.level}}">' +
       '<icon ng-if="m.icon" class="icon-{{ m.icon }}">&nbsp;</icon>'+
       '<strong ng-if="m.tagline">{{ m.tagline }}:&nbsp;</strong>' +
-      '{{ m.text }}' +
+      '{{ m.text }} ' +
+      '<a ng-if="m.retryCallback" href="javascript:void(0);" ng-click="m.retryCallback">Retry</a>' +
       '<button type="button" class="close" ng-click="closeFlash(m.reference)" aria-hidden="true">&times;</button>' +
     '</div>';
 
