@@ -32,6 +32,9 @@ angular.module('flash', [])
         tagline = 'Error';
         break;
     }
+
+    returnCounter = counter;
+
     messages.push({
       'text': text,
       'level': level,
@@ -41,11 +44,13 @@ angular.module('flash', [])
       'reference': counter++
     })
     emit();
+
+    return returnCounter;
   };
 
   var flash = {}
   angular.forEach(['danger', 'warning', 'info', 'success'], function(level) {
-    flash[level] = function (text, seconds) { pushFlash(text, level, seconds || false); };
+    flash[level] = function (text, seconds) { return pushFlash(text, level, seconds || false); };
   });
 
   return flash;
