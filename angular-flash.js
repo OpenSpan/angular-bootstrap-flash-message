@@ -15,6 +15,24 @@ angular.module('flash', [])
 
   $rootScope.$on('$locationChangeSuccess', emit);
 
+  var Message = function Message(text, level, icon, tagline, seconds, retryCallback) {
+    this.text = text;
+    this.level = level;
+    this.icon = icon;
+    this.tagline = tagline;
+    this.seconds = seconds;
+    this.reference = counter++;
+    this.retryCallback = retryCallback;
+  };
+
+  Message.prototype = {};
+  Message.prototype.equals = function(other_message) {
+    return typeof other_message !== 'undefined' &&
+        other_message !== null &&
+        this.text === other_message.text &&
+        this.level === other_message.level;
+  };
+
   pushFlash = function(text, level, seconds, zone, retryCallback) {
     var icon;
     var tagline;
@@ -33,15 +51,7 @@ angular.module('flash', [])
         break;
     }
 
-    messages[zone] = {
-      'text': text,
-      'level': level,
-      'icon': icon,
-      'tagline': tagline,
-      'seconds': seconds,
-      'reference': counter++,
-      'retryCallback': retryCallback
-    };
+    messages[zone] = new Message(text, level, icon, tagline, seconds, retryCallback);
     emit();
   };
 
@@ -62,30 +72,35 @@ angular.module('flash', [])
 }])
 
 .directive('flashMessages', [function() {
-  var directive = { restrict: 'A', replace: true, scope: { "zone": "@" } };
+  var directive = { restrict: 'EA', replace: true, scope: { "zone": "@" } };
   directive.template =
-    '<div id="flash-message-{{m.reference}}" class="alert alert-{{m.level}}">' +
+    '<div ng-repeat="m in messages" id="flash-message-{{m.reference}}" class="alert alert-{{m.level}}">' +
       '<icon ng-if="m.icon" class="icon-{{ m.icon }}">&nbsp;</icon>'+
       '<strong ng-if="m.tagline">{{ m.tagline }}:&nbsp;</strong>' +
       '{{ m.text }} ' +
       '<a ng-if="m.retryCallback" href="javascript:void(0);" ng-click="m.retryCallback">Retry</a>' +
       '<button type="button" class="close" ng-click="closeFlash(m.reference)" aria-hidden="true">&times;</button>' +
     '</div>';
-
   directive.controller = ['$scope', '$rootScope', '$timeout', function($scope, $rootScope, $timeout) {
+    $scope.messages = {};
     $scope.closeFlash = function(ref) {
-      angular.element("#flash-message-"+ref).remove();
+      delete $scope.messages[ref];
     }
     $rootScope.$on('flash:message', function(_, messages, done) {
       if(messages[$scope.zone]) {
-        $scope.m = message = messages[$scope.zone];
-        if(message.seconds) {
-          $timeout(
-            function() { $scope.closeFlash(message.reference); },
-            message.seconds * 1000
-          );
+        message = messages[$scope.zone];
+        // Ignore message if an equalivalent message is already shown
+        if (!Object.keys($scope.messages).some(elem_key => message.equals($scope.messages[elem_key]))) {
+          $scope.messages[message.reference] = message;
+          if(message.seconds) {
+            var localReference = message.reference;
+            $timeout(
+              function() { $scope.closeFlash(localReference); },
+              message.seconds * 1000
+            );
+          }
+          done($scope.zone);
         }
-        done($scope.zone);
       }
     });
   }];
