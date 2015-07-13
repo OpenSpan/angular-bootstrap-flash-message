@@ -62,23 +62,24 @@ angular.module('flash', [])
 }])
 
 .directive('flashMessages', [function() {
-  var directive = { restrict: 'EA', replace: false, scope: { "zone": "@" } };
+  var directive = { restrict: 'EA', replace: true, scope: { "zone": "@" } };
   directive.template =
-    '<div id="flash-message-{{m.reference}}" class="alert alert-{{m.level}}">' +
+    '<div ng-repeat="m in messages" id="flash-message-{{m.reference}}" class="alert alert-{{m.level}}">' +
       '<icon ng-if="m.icon" class="icon-{{ m.icon }}">&nbsp;</icon>'+
       '<strong ng-if="m.tagline">{{ m.tagline }}:&nbsp;</strong>' +
       '{{ m.text }} ' +
       '<a ng-if="m.retryCallback" href="javascript:void(0);" ng-click="m.retryCallback">Retry</a>' +
       '<button type="button" class="close" ng-click="closeFlash(m.reference)" aria-hidden="true">&times;</button>' +
     '</div>';
-
   directive.controller = ['$scope', '$rootScope', '$timeout', function($scope, $rootScope, $timeout) {
+    $scope.messages = {};
     $scope.closeFlash = function(ref) {
-      angular.element("#flash-message-"+ref).remove();
+      delete $scope.messages[ref];
     }
     $rootScope.$on('flash:message', function(_, messages, done) {
       if(messages[$scope.zone]) {
-        $scope.m = message = messages[$scope.zone];
+        message = messages[$scope.zone];
+        $scope.messages[message.reference] = message;
         if(message.seconds) {
           $timeout(
             function() { $scope.closeFlash(message.reference); },
