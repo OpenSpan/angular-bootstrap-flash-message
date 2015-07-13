@@ -62,7 +62,7 @@ angular.module('flash', [])
 }])
 
 .directive('flashMessages', [function() {
-  var directive = { restrict: 'A', replace: true, scope: { "zone": "@" } };
+  var directive = { restrict: 'EA', replace: false, scope: { "zone": "@" } };
   directive.template =
     '<div id="flash-message-{{m.reference}}" class="alert alert-{{m.level}}">' +
       '<icon ng-if="m.icon" class="icon-{{ m.icon }}">&nbsp;</icon>'+
