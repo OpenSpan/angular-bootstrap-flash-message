@@ -32,6 +32,25 @@ angular.module('flash', [])
         this.text === other_message.text &&
         this.level === other_message.level;
   };
+  Message.prototype.foundInCollection = function(array) {
+    for (var i in array)
+    {
+       if (this.equals(array[i])) return true;
+    }
+    return false;
+  };
+  Message.prototype.foundInHash = function(hash) {
+    //for (var key in hash)
+    //{
+    //   if (hash.hasOwnProperty(key) && this.equals(hash[key])) return true;
+    //}
+    var keys = Object.keys(hash);
+
+    for (var i = 0; i < keys.length; i++) {
+      if (this.equals(hash[keys[i]])) return true;
+    }
+    return false;
+  };
 
   pushFlash = function(text, level, seconds, zone, retryCallback) {
     var icon;
@@ -90,7 +109,7 @@ angular.module('flash', [])
       if(messages[$scope.zone]) {
         message = messages[$scope.zone];
         // Ignore message if an equalivalent message is already shown
-        if (!Object.keys($scope.messages).some(elem_key => message.equals($scope.messages[elem_key]))) {
+        if (!message.foundInHash($scope.messages)) {
           $scope.messages[message.reference] = message;
           if(message.seconds) {
             var localReference = message.reference;
