@@ -122,6 +122,11 @@ angular.module('flash', [])
         }
       }
     });
+    $rootScope.$on('flash:clear', function(_, zone) {
+      if($scope.zone === zone) {
+        $scope.messages = {};
+      }
+    });
   }];
 
   return directive;
