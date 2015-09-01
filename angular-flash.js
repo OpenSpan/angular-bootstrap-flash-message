@@ -123,8 +123,8 @@ angular.module('flash', [])
               message.seconds * 1000
             );
           }
-          done($scope.zone);
         }
+        done($scope.zone);
       }
     });
     $rootScope.$on('flash:clear', function(_, zone) {
