@@ -15,7 +15,7 @@ angular.module('flash', [])
 
   $rootScope.$on('$locationChangeSuccess', emit);
 
-  var Message = function Message(text, level, icon, tagline, seconds, retryCallback) {
+  var Message = function Message(text, level, icon, tagline, seconds, retryCallback, clearPrior) {
     this.text = text;
     this.level = level;
     this.icon = icon;
@@ -23,6 +23,7 @@ angular.module('flash', [])
     this.seconds = seconds;
     this.reference = counter++;
     this.retryCallback = retryCallback;
+    this.clearPrior = clearPrior;
   };
 
   Message.prototype = {};
@@ -52,7 +53,7 @@ angular.module('flash', [])
     return false;
   };
 
-  pushFlash = function(text, level, seconds, zone, retryCallback) {
+  pushFlash = function(text, level, seconds, zone, retryCallback, clearPrior) {
     var icon;
     var tagline;
     switch(level) {
@@ -70,7 +71,7 @@ angular.module('flash', [])
         break;
     }
 
-    messages[zone] = new Message(text, level, icon, tagline, seconds, retryCallback);
+    messages[zone] = new Message(text, level, icon, tagline, seconds, retryCallback, clearPrior);
     emit();
   };
 
@@ -82,7 +83,8 @@ angular.module('flash', [])
         level,
         options.seconds || false,
         options.zone,
-        options.retryCallback || false
+        options.retryCallback || false,
+        options.clearPrior || false
       );
     }
   });
@@ -108,6 +110,9 @@ angular.module('flash', [])
     $rootScope.$on('flash:message', function(_, messages, done) {
       if(messages[$scope.zone]) {
         message = messages[$scope.zone];
+        if (message.clearPrior) {
+          $scope.messages = {};
+        }
         // Ignore message if an equalivalent message is already shown
         if (!message.foundInHash($scope.messages)) {
           $scope.messages[message.reference] = message;
