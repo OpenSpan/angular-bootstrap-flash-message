@@ -17,7 +17,9 @@ angular.controller("Test", [
    flash.success({
      text: "Success message",
      seconds: 10,
-     zone: 'form'
+     zone: 'form',
+     retryCallback: function() { doSomething(); }
+     clearPrior: true
    });
  }]);
 ```
@@ -26,17 +28,29 @@ The module exports the `flash` service with the following methods:
 
  * `flash.success`
  * `flash.danger`
- * `flash.info`
  * `flash.warning`
+ * `flash.info`
+   * Info does not have a icon or tagline.
 
-Each of these methods take two arguments:
+Each of these methods take arguments:
  
  * the flash message
  * (optional) timeout to delete the flash message, in seconds
+ * (optional) matching zone to display the message (defaults to unspecified zone)
+ * (optional) retry callback
+ * (optional) clear existing messages on the matching zone before adding this one
 
 And in order to render the flash messages, you must add the following directive in your
 template:
 
 ```html
-<div flash:messages></div>
+<flash:messages></flash:messages>
+```
+
+This defaults to an unspecified zone.
+
+You can also specify a zone to have multiple locations of messages, relating to your controls:
+
+```html
+<flash:messages zone="myForm"></flash:messages>
 ```
