@@ -18,7 +18,7 @@ describe "Retry", () ->
     $document = _$document_
 
   it "link should not be rendered", () ->
-    template = $compile('<div flash:messages></div>') $scope
+    template = $compile('<div><flash:messages></flash:messages></div>') $scope
 
     flash.success
       text: "Test message"
@@ -30,7 +30,7 @@ describe "Retry", () ->
     
 
   it "link should be rendered", () ->
-    template = $compile('<div flash:messages></div>') $scope
+    template = $compile('<div><flash:messages></flash:messages></div>') $scope
 
     flash.success
       text: "Test message"
@@ -43,7 +43,7 @@ describe "Retry", () ->
 
 
   it "should trigger the callback", () ->
-    template = $compile('<div flash:messages></div>') $scope
+    template = $compile('<div><flash:messages></flash:messages></div>') $scope
 
     testCallback = () -> flash.success { text: "Perfect" }
     flash.success

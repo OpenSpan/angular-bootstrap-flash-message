@@ -13,7 +13,7 @@ describe "Setter", () ->
     flash = _flash_
     emittedStructure = jasmine.createSpy "emittedStructure"
     spyOn($rootScope, '$emit').andCallFake (_, structure, __) ->
-      emittedStructure structure
+      emittedStructure JSON.stringify(structure)
 
 
   it "should exist for danger, succes, info, warning", () ->
@@ -41,12 +41,13 @@ describe "Setter", () ->
       text: "Test"
 
     expectedEmit =
-      text: "Test",
-      level: "success",
-      icon: "icon-ok-circle",
-      tagline: "Success",
-      seconds: false,
+      text: "Test"
+      level: "success"
+      icon: "icon-ok-circle"
+      tagline: "Success"
+      seconds: false
       reference: 1
       retryCallback: false
+      clearPrior : false
 
-    expect(emittedStructure).toHaveBeenCalledWith { undefined: expectedEmit }
+    expect(emittedStructure).toHaveBeenCalledWith JSON.stringify({ undefined: expectedEmit })
