@@ -87,3 +87,46 @@ describe "Binding", () ->
       text: "test"
     $scope.$digest()
     expect(template.html()).not.toContain("flash-message-7")
+
+  it "should clear messages", () ->
+    template = $compile('<div><flash:messages></flash:messages></div>') $scope
+    flash.success
+      text: "Test message"
+    $scope.$digest()
+    expect(template.html()).toContain("Test message")
+
+    $rootScope.$emit('flash:clear');
+    $scope.$digest()
+    expect(template.html()).not.toContain("Test message")
+
+  it "should clear zone specific messages", () ->
+    template = $compile('<div><flash:messages zone="main"></flash:messages></div>') $scope
+    flash.success
+      text: "Test message"
+      zone: "main"
+    $scope.$digest()
+    expect(template.html()).toContain("Test message")
+
+    $rootScope.$emit('flash:clear', "main");
+    $scope.$digest()
+    expect(template.html()).not.toContain("Test message")
+
+  it "should not leak zones when clearing", () ->
+    template = $compile('<div><flash:messages zone="main"></flash:messages></div>') $scope
+    flash.success
+      text: "Test message"
+      zone: "main"
+    $scope.$digest()
+    expect(template.html()).toContain("Test message")
+
+    $rootScope.$emit('flash:clear');
+    $scope.$digest()
+    expect(template.html()).toContain("Test message")
+
+    $rootScope.$emit('flash:clear', "other");
+    $scope.$digest()
+    expect(template.html()).toContain("Test message")
+
+    $rootScope.$emit('flash:clear', "main");
+    $scope.$digest()
+    expect(template.html()).not.toContain("Test message")
