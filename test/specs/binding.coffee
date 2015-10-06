@@ -17,7 +17,7 @@ describe "Binding", () ->
 
 
   it "should render message", () ->
-    template = $compile('<div flash:messages></div>') $scope
+    template = $compile('<div><flash:messages></flash:messages></div>') $scope
     flash.success
       text: "Test message"
     $scope.$digest()
@@ -27,7 +27,7 @@ describe "Binding", () ->
  
 
   it "should render zone specific messages", () ->
-    template = $compile('<div flash:messages zone="main"></div>') $scope
+    template = $compile('<div><flash:messages zone="main"></flash:messages></div>') $scope
     flash.success
       text: "Test message"
       zone: "main"
@@ -37,7 +37,7 @@ describe "Binding", () ->
     expect(templateHtml).toContain("Test message")
 
   it "should not leak zones", () ->
-    template = $compile('<div flash:messages zone="main"></div>') $scope
+    template = $compile('<div><flash:messages zone="main"></flash:messages></div>') $scope
     flash.success
       text: "Intended"
       zone: "main"
