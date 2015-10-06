@@ -130,3 +130,64 @@ describe "Binding", () ->
     $rootScope.$emit('flash:clear', "main");
     $scope.$digest()
     expect(template.html()).not.toContain("Test message")
+
+  it "should clear prior messages", () ->
+    template = $compile('<div><flash:messages></flash:messages></div>') $scope
+    flash.success
+      text: "Test message"
+    $scope.$digest()
+    expect(template.html()).toContain("Test message")
+
+    flash.success
+      text: "Other message"
+      clearPrior: true
+    $scope.$digest()
+    expect(template.html()).not.toContain("Test message")
+    expect(template.html()).toContain("Other message")
+
+  it "should clear zone specific prior messages", () ->
+    template = $compile('<div><flash:messages zone="main"></flash:messages></div>') $scope
+    flash.success
+      text: "Test message"
+      zone: "main"
+    $scope.$digest()
+    expect(template.html()).toContain("Test message")
+
+    flash.success
+      text: "Other message"
+      zone: "main"
+      clearPrior: true
+    $scope.$digest()
+    expect(template.html()).not.toContain("Test message")
+    expect(template.html()).toContain("Other message")
+
+  it "should not leak zones when clearing prior messages", () ->
+    template = $compile('<div><flash:messages zone="main"></flash:messages></div>') $scope
+    flash.success
+      text: "Test message"
+      zone: "main"
+    $scope.$digest()
+    expect(template.html()).toContain("Test message")
+
+    flash.success
+      text: "Other message"
+      clearPrior: true
+    $scope.$digest()
+    expect(template.html()).toContain("Test message")
+    expect(template.html()).not.toContain("Other message")
+
+    flash.success
+      text: "Other message"
+      zone: "other"
+      clearPrior: true
+    $scope.$digest()
+    expect(template.html()).toContain("Test message")
+    expect(template.html()).not.toContain("Other message")
+
+    flash.success
+      text: "Other message"
+      zone: "main"
+      clearPrior: true
+    $scope.$digest()
+    expect(template.html()).not.toContain("Test message")
+    expect(template.html()).toContain("Other message")
