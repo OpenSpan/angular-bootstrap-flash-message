@@ -49,3 +49,41 @@ describe "Binding", () ->
 
     templateHtml = template.html()
     expect(templateHtml).not.toContain("Unintended")
+
+  it "should not readd identical messages", () ->
+    template = $compile('<div><flash:messages></flash:messages></div>') $scope
+
+    flash.danger
+      text: "test"
+    $scope.$digest()
+    expect(template.html()).toContain("flash-message-1")
+
+    flash.danger
+      text: "test"
+    $scope.$digest()
+    expect(template.html()).not.toContain("flash-message-2")
+
+    flash.danger
+      text: "test2"
+    $scope.$digest()
+    expect(template.html()).toContain("flash-message-3")
+
+    flash.danger
+      text: "test2"
+    $scope.$digest()
+    expect(template.html()).not.toContain("flash-message-4")
+
+    flash.danger
+      text: "test"
+    $scope.$digest()
+    expect(template.html()).not.toContain("flash-message-5")
+
+    flash.warning
+      text: "test"
+    $scope.$digest()
+    expect(template.html()).toContain("flash-message-6")
+
+    flash.warning
+      text: "test"
+    $scope.$digest()
+    expect(template.html()).not.toContain("flash-message-7")
